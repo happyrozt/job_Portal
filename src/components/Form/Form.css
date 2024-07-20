@@ -1,14 +1,24 @@
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+
 .form {
     display: flex;
     flex-direction: column;
     padding: 1rem;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    width: 29%
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    padding-top: .3rem;
+    padding-top: .2rem;
+    width: 100%;
 }
 
 .form-group input {
@@ -16,11 +26,12 @@
     outline: none;
     border-radius: 15px;
     border: 1px solid #007aff;
-    width:100%
+    width: 100%;
+
 }
 
-.form-group input::placeholder{
-  color: black;
+.form-group input::placeholder {
+    color: black;
 }
 
 .form-group select {
@@ -32,8 +43,8 @@
 }
 
 .select-dropdown option {
-    line-height: 50px; 
-  }
+    line-height: 50px;
+}
 
 .form-button {
     padding: .7rem;
@@ -48,8 +59,8 @@
 .form-group label {
     font-size: 1.1rem;
     font-weight: 500;
-    padding-top: 0.3rem;
-    padding-bottom: .3rem;
+    padding-top: 0.2rem;
+    padding-bottom: .2rem;
     text-align: justify;
 }
 
@@ -73,6 +84,69 @@
 .error {
     color: red;
     font-weight: 600;
-    padding-top: 0.3rem;
-    
+    padding-top: 0.2rem;
+
+}
+@media (max-width: 1290px) {
+    .form {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        width: 40%
+    }
+    }
+
+
+@media (max-width: 1200px) {
+    .form {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        width: 40%
+    }
+    }
+
+@media (max-width: 992px) {
+    .form {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        width: 50%
+    }
+    }
+  
+
+@media (max-width: 871px) {
+    .form {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        width: 60%
+    }
+    }
+
+
+@media (max-width:640px) {
+    .form {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        width: 90%
+    }
+    }
+
+
+@media (max-width:560px) {
+    .form {
+        display: flex;
+        flex-direction: column;
+        padding: .5rem;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        width: 90%
+    }
 }

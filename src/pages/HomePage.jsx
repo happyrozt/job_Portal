@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkFreeLancerJobApplication, setUserData, userSelectedJob } from '../store/Slice';
-import { checkFreelancerApplicationStatus, getLoggeduserDatafromlocStr } from '../utils/localStorageHelpers';
+import { checkFreeLancerJobApplication, setAllHirerData, setUserData, userSelectedJob } from '../store/Slice';
+import { checkFreelancerApplicationStatus, getLoggeduserDatafromlocStr, getUsersWithRoleHirer } from '../utils/localStorageHelpers';
 import JobListingCard from '../components/card/JobListingCard';
 
 function HomePage() {
@@ -11,9 +11,12 @@ function HomePage() {
   const dispatch = useDispatch();
   const [hirerJobs, setHirerJobs] = useState([]);
  const {jobsData,isUserRole,userSearchedData,logedUserData} = useSelector((state)=>state.Auth)
+
   
 
   useEffect(() => {
+    let JobsData = getUsersWithRoleHirer();
+      dispatch(setAllHirerData(JobsData));
   
     if (jobsData && jobsData.length > 0) {
 
@@ -27,7 +30,7 @@ function HomePage() {
       }, []);
       setHirerJobs(jobs.reverse());
     }
-  }, [jobsData,dispatch]);
+  }, [dispatch]);
 
   const handleClick = (clickedData) => {
     if (isUserRole === 'Freelancer') {

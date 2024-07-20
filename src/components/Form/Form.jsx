@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import './Form.css';
 import Input from '../input/Input';
-import { useDispatch, useSelector } from 'react-redux';
-import {checkLoggedIn,registerUser,setUserData, setUserRole  } from '../../store/Slice';
+import { useDispatch } from 'react-redux';
+import { setUserData, setUserRole } from '../../store/Slice';
 import { useNavigate } from 'react-router-dom';
-import { setInLocalStorage } from '../../utils/localStorageHelpers';
-
 
 const RegisterOptions = [
   { name: 'username', label: 'User Name', type: 'text', placeholder: 'User Name' },
@@ -20,8 +18,8 @@ const LoginOptions = [
 ];
 
 function Form() {
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [formData, setFormData] = useState({
     username: '',
@@ -30,9 +28,6 @@ function Form() {
     password: '',
     role: ''
   });
-
-  const registerUserData  = useSelector((state)=>state.Auth.registerUserData)
-  const logedUserData = useSelector((state)=>state.Auth.logedUserData)
   const [errors, setErrors] = useState({});
 
   const validate = () => {
@@ -65,25 +60,20 @@ function Form() {
     return Object.keys(newErrors).length === 0;
   };
 
-
-  const handleClear = ()=>{
-      
+  const handleClear = () => {
     setFormData({
-        username: '',
-        lastName: '',
-        email: '',
-        password: '',
-        role: ''
-      });
-  }
+      username: '',
+      lastName: '',
+      email: '',
+      password: '',
+      role: ''
+    });
+    setErrors({});
+  };
+
   const handleRegister = () => {
     const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
-
     const isEmailExists = existingUsers.some(user => user.email === formData.email);
-    if (isEmailExists) {
-      setErrors({ email: 'Email already registered' });
-      return;
-    }
 
     if (isEmailExists) {
       setErrors({ email: 'Email already registered' });
@@ -97,48 +87,60 @@ function Form() {
       password: formData.password,
       role: formData.role,
       userLogged: false,
-      data:[]
+      data: []
     };
     existingUsers.push(newUserData);
-
     localStorage.setItem('users', JSON.stringify(existingUsers));
-    setIsLoggedIn(!isLoggedIn)
-    handleClear()
-  };
 
+    setIsLoggedIn(true);
+    handleClear();
+  };
 
   const handleLogin = () => {
     const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+    const user = storedUsers.find(user => user.email === formData.email);
+    const newErrors = {};
+
+    if (!user) {
+      newErrors.email = 'Invalid email';
+    } else if (user.password !== formData.password) {
+      newErrors.password = 'Invalid password';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
     const userIndex = storedUsers.findIndex(user => user.email === formData.email && user.password === formData.password);
 
     if (userIndex !== -1) {
- 
       storedUsers[userIndex].userLogged = true;
       localStorage.setItem('users', JSON.stringify(storedUsers));
 
-      
       const loggedUsers = JSON.parse(localStorage.getItem('loggedUsers')) || {};
       loggedUsers["data"] = storedUsers[userIndex];
-       localStorage.setItem('loggedUsers', JSON.stringify(loggedUsers));
-      
-       dispatch(setUserData(loggedUsers))
-      dispatch(setUserRole(loggedUsers.data.role))
-      handleClear()
-      console.log('Login successful');
-      navigate('/')
-    } else {
-      setErrors({ email: 'Invalid email or password' });
-      console.log('Invalid email or password');
+      localStorage.setItem('loggedUsers', JSON.stringify(loggedUsers));
+
+      dispatch(setUserData(loggedUsers));
+      dispatch(setUserRole(loggedUsers.data.role));
+      handleClear();
+      navigate('/');
     }
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData(prevFormData => ({
+      ...prevFormData,
       [name]: value
-    });
-    // dispatch(authEmail(formData.email))
+    }));
+    if (errors[name]) {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        [name]: ''
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
@@ -149,13 +151,11 @@ function Form() {
       } else {
         handleRegister();
       }
-    } else {
-      console.log('Validation failed');
     }
   };
 
   return (
-    <div>
+    <div className='form-container'>
       <form onSubmit={handleSubmit} className="form">
         {isLoggedIn ? (
           <>

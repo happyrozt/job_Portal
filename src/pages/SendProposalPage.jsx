@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserSelectedjob, setAppliedJobData, sendProposal, userSelectedJob } from '../store/Slice';
 import "../App.css";
-import { addProposalDataToUser, getDataById, setuserAppliedJobData } from '../utils/localStorageHelpers';
+
+
+import Input from '../components/input/Input';
+import { sendProposal, setAppliedJobData, userSelectedJob } from '../store/Slice';
+import { addProposalDataToUser, setuserAppliedJobData } from '../utils/localStorageHelpers';
+
+const inputFields = [
+  { label: 'Name', type: 'text', placeholder: 'Name', name: 'name' },
+  { label: 'Education', type: 'text', placeholder: 'Education', name: 'education' },
+  { label: 'Experience', type: 'text', placeholder: 'Experience', name: 'experience' }
+];
 
 function SendProposalPage() {
   const { id } = useParams();
-  const {selectedJob,logedUserData} = useSelector((state)=> state.Auth)
+  const { selectedJob, logedUserData } = useSelector((state) => state.Auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [proposal, setProposal] = useState({ resume: '', personalInfo: '' });
@@ -19,19 +28,26 @@ function SendProposalPage() {
     error: ""
   });
 
+  const [errors, setErrors] = useState({
+    name: "",
+    education: "",
+    experience: "",
+    resumeFile: ""
+  });
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file.type !== 'application/pdf') {
-      setFormData(prevFormData => ({
-        ...prevFormData,
-        error: 'Only PDF files are allowed.'
+    if (file && file.type !== 'application/pdf') {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        resumeFile: 'Only PDF files are allowed.'
       }));
       setResumeFile(null);
     } else {
       setResumeFile(file);
-      setFormData(prevFormData => ({
-        ...prevFormData,
-        error: ''
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        resumeFile: ''
       }));
     }
   };
@@ -42,17 +58,30 @@ function SendProposalPage() {
       ...prevFormData,
       [name]: value
     }));
+    setErrors(prevErrors => ({
+      ...prevErrors,
+      [name]: value.trim() === "" ? `${name.charAt(0).toUpperCase() + name.slice(1)} is required` : ""
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const { name, education, experience } = formData;
 
-    if (!name || !education || !experience || !resumeFile) {
-      setFormData(prevFormData => ({
-        ...prevFormData,
-        error: 'All fields are required.'
-      }));
+    const validationErrors = {};
+    inputFields.forEach(field => {
+      if (!formData[field.name].trim()) {
+        validationErrors[field.name] = `${field.label} is required`;
+      }
+    });
+
+    if (!resumeFile) {
+      validationErrors.resumeFile = 'Resume is required';
+    }
+
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) {
       return;
     }
 
@@ -70,11 +99,10 @@ function SendProposalPage() {
     };
     let payload = { hirerEmail, proposalData };
     
-    
-    let addProposalDataToUserResult = addProposalDataToUser(hirerEmail, proposalData )
-    dispatch(sendProposal(addProposalDataToUserResult))
-    let appliedJobDataResult =setuserAppliedJobData(logedUserData.data.email, selectedJob);
-    dispatch(setAppliedJobData(appliedJobDataResult))
+    let addProposalDataToUserResult = addProposalDataToUser(hirerEmail, proposalData);
+    dispatch(sendProposal(addProposalDataToUserResult));
+    let appliedJobDataResult = setuserAppliedJobData(logedUserData.data.email, selectedJob);
+    dispatch(setAppliedJobData(appliedJobDataResult));
     setFormData({
       name: "",
       education: "",
@@ -83,66 +111,49 @@ function SendProposalPage() {
     });
     setProposal({ resume: '', personalInfo: '' });
     setResumeFile(null);
-     navigate('/appliedjobs');
+    navigate('/applyedjobs');
     console.log('Proposal submitted:', formData);
   };
 
   useEffect(() => {
     if (!selectedJob && id) {
-       let selctedJobresult =  getDataById(id)
-        dispatch(userSelectedJob(selctedJobresult));
+      let selectedJobResult = getDataById(id);
+      dispatch(userSelectedJob(selectedJobResult));
     }
-}, [dispatch, id, selectedJob]);
+  }, [dispatch, id, selectedJob]);
 
   if (!selectedJob) {
     return <div>No job details available. Please go back to the job listings.</div>;
   }
 
-  const { name, education, experience, error } = formData;
-
   return (
     <div className='send-proposal-page'>
-      <p className='proposal-title'>Apply for {selectedJob.title}</p>
+      <p className='proposal-title'>Apply for {selectedJob.Title}</p>
       <form onSubmit={handleSubmit} className='proposal-form'>
-        <div className='proposal-input-group'>
-          <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            placeholder='Name'
-            name="name"
-            value={name}
+        {inputFields.map(field => (
+          <div className='send-proposal-input-div'>
+             <Input
+            key={field.name}
+            label={field.label}
+            type={field.type}
+            name={field.name}
+            value={formData[field.name]}
             onChange={handleChange}
+            placeholder={field.placeholder}
+            error={errors[field.name]}
+          
           />
-        </div>
-        <div className='proposal-input-group'>
-          <label htmlFor="education">Education</label>
-          <input
-            type="text"
-            placeholder='Education'
-            name="education"
-            value={education}
-            onChange={handleChange}
-          />
-        </div>
-        <div className='proposal-input-group'>
-          <label htmlFor="experience">Experience</label>
-          <input
-            type="text"
-            placeholder='Experience'
-            name="experience"
-            value={experience}
-            onChange={handleChange}
-          />
-        </div>
+          </div>
+       
+        ))}
         <div className='resume-div'>
           <label>Upload Resume</label>
           <input type='file' onChange={handleFileChange} />
+          {errors.resumeFile && <span className="error">{errors.resumeFile}</span>}
         </div>
-
         <div className='proposal-send-button'>
           <button type='submit'>Submit</button>
         </div>
-        {error && <p className="error-message" style={{ color: "red" }}>{error}</p>}
       </form>
     </div>
   );

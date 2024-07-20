@@ -33,23 +33,23 @@ function JobDetailPage() {
     return (
         <div className='job-detail-page'>
             <div className='job-deatil-conatiner'>
-                <p className='job-description'>{selectedJob.description}</p>
-                <p className='apply-company-name'>{selectedJob.companyName}</p>
-                <p className='job-title'>{selectedJob.title}</p>
+                <p className='job-description'>{selectedJob.Description}</p>
+                <p className='apply-company-name'>{selectedJob['company Name']}</p>
+                <p className='job-title'>{selectedJob.Title}</p>
                 <div style={{ display: "flex", gap: "1rem" }}>
                     <RiMoneyRupeeCircleFill className='ruppe-icon' />
-                    <p> {selectedJob.salary}</p>
+                    <p> {selectedJob.Salary}</p>
                 </div>
                 <div style={{ display: "flex", gap: "1rem" }}>
                     <MdWorkOutline className='ruppe-icon' />
-                    <p> {selectedJob.workMode}</p>
+                    <p> {selectedJob['Work Mode']}</p>
                 </div>
 
                 <div style={{ display: "flex", gap: "1rem" }}>
                     <IoLocationOutline className='ruppe-icon' />
-                    <p> {selectedJob.location}</p>
+                    <p> {selectedJob.Location}</p>
                 </div>
-                <p>Skill: {selectedJob.skill}</p>
+                <p>Skill: {selectedJob.Skill}</p>
                 <div className='job-apply-button'>
                     <button onClick={handleApply}>Apply</button>
                 </div>

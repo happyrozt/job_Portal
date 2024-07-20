@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserLogedUserDataByEmail, updateJobPoststatus } from '../store/Slice';
-import { getUserDataByEmail, toggleJobStatus } from '../utils/localStorageHelpers';
+import { getUserLogedUserDataByEmail, setAllHirerData, updateJobPoststatus } from '../store/Slice';
+import { getUserDataByEmail, getUsersWithRoleHirer, toggleJobStatus } from '../utils/localStorageHelpers';
 
 function ClosejobPost() {
   const {logedUserData,closeJobPageData} = useSelector((state)=>state.Auth)
@@ -30,6 +30,8 @@ function ClosejobPost() {
     dispatch(updateJobPoststatus(JobPostStatus));
     let closeJobPageData = getUserDataByEmail(logedUserData.data.email)
     dispatch(getUserLogedUserDataByEmail(closeJobPageData))
+    let JobsData = getUsersWithRoleHirer();
+    dispatch(setAllHirerData(JobsData));
     alert("Status Updated")
   };
 
@@ -39,13 +41,13 @@ function ClosejobPost() {
         {logedUserJObData && logedUserJObData.length > 0 ? (
           logedUserJObData.map((job, index) => (
             <div key={index} className='job-item'>
-              <h2>{job.title}</h2>
-              <p>{job.description}</p>
-              <p>Industry: {job.industry}</p>
-              <p>Location: {job.location}</p>
-              <p>Work Mode: {job.workMode}</p>
-              <p>Skill: {job.skill}</p>
-              <p>Salary: {job.salary}</p>
+              <h2>{job.Title}</h2>
+              <p>{job.Description}</p>
+              <p>Industry: {job['Industry']}</p>
+              <p>Location: {job['Location']}</p>
+              <p>Work Mode: {job['Work Mode']}</p>
+              <p>Skill: {job['Skill']}</p>
+              <p>Salary: {job['Salary']}</p>
               <p>Status: {job.status}</p>
               <div className='job-status-buttondiv'>
               {job.status === "active" ? (

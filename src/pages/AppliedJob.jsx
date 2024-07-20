@@ -20,20 +20,20 @@ function AppliedJob() {
       setAppliedJobs(appliedJobData);
     }
   }, [appliedJobData]);
-console.log(appliedJobs,"jjj")
+
   return (
     <div className='appliedJobContainer'>
       <h2 className='appled-job-title'>Applied Jobs</h2>
       {appliedJobs.length > 0 ? (
         appliedJobs.map((job, index) => (
           <div key={index} className='applied-job-item'>
-            <h2>{job.title}</h2>
-            <p>{job.description}</p>
-            <p>Industry: {job.industry}</p>
-            <p>Location: {job.location}</p>
-            <p>Work Mode: {job.workMode}</p>
-            <p>Skill: {job.skill}</p>
-            <p>Salary: {job.salary}</p>
+            <h2>{job.Title}</h2>
+            <p>{job.Description}</p>
+            <p>Industry: {job.Industry}</p>
+            <p>Location: {job.Location}</p>
+            <p>Work Mode: {job['Work Mode']}</p>
+            <p>Skill: {job.Skill}</p>
+            <p>Salary: {job.Salary}</p>
             <p>Status : {job.status}</p>
           </div>
         ))

@@ -148,8 +148,11 @@ export const filterHirersByTitle = (title) => {
   const filteredData = users
     .filter(user => user.role === 'Hirer')
     .flatMap(hirer => hirer.data.filter(item =>
-      item.status === 'active' && item.title.toLowerCase().includes(lowercasedTitle)
+      item.status === 'active' && item.Title.toLowerCase().includes(lowercasedTitle)
     ));
+    if (filteredData.length === 0) {
+      return 'No job found';
+    }
 
   return filteredData;
 };

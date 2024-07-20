@@ -2,65 +2,82 @@ import React, { useState } from 'react';
 import "../App.css";
 import Input from '../components/input/Input';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUsersJobData } from '../store/Slice';
-import { addUserJobDetail } from '../utils/localStorageHelpers';
-
+import { setAllHirerData, setUsersJobData } from '../store/Slice';
+import { addUserJobDetail, getUsersWithRoleHirer } from '../utils/localStorageHelpers';
 
 function CreateJobPost() {
  
-  const logedUserData = useSelector((state)=>state.Auth.logedUserData)
+  const  logedUserData = useSelector((state) => state.Auth.logedUserData);
+ 
+ 
 
-
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
-    title: '',
-    companyName: '',
-    industry: '',
-    skill: '',
-    location: '',
-    workMode: '',
-    description: '',
-    salary: '',
+    Title: '',
+    'Company Name': '',
+    'Industry': '',
+    'Skill': '',
+    'Location': '',
+    'Work Mode': '',
+    'Description': '',
+    'Salary': '',
   });
 
   const [errors, setErrors] = useState({
-    title: '',
-    companyName: '',
-    industry: '',
-    skill: '',
-    location: '',
-    workMode: '',
-    description: '',
-    salary: '',
+    Title: '',
+    'Company Name': '',
+    'Industry': '',
+    'Skill': '',
+    'Location': '',
+    'Work Mode': '',
+    'Description': '',
+    'Salary': '',
   });
 
-  const clearState = ()=>{
+  const clearState = () => {
     setFormData({
-      title: '',
-      companyName: '',
-      industry: '',
-      skill: '',
-      location: '',
-      workMode: '',
-      description: '',
-      salary: '',
-    })
-  }
+      Title: '',
+      'Company Name': '',
+      'Industry': '',
+      'Skill': '',
+      'Location': '',
+      'Work Mode': '',
+      'Description': '',
+      'Salary': '',
+    });
+  };
 
   const handleInputChange = (e, fieldName) => {
     const { value } = e.target;
+
+    if (fieldName === 'Salary') {
+      const salaryRegex = /^\d+\s*Lakh\s*per\s*annum$/i;
+      if (!salaryRegex.test(value)) {
+        setErrors({
+          ...errors,
+          [fieldName]: 'Invalid salary format. Example: 90 Lakh per annum.',
+        });
+      } else {
+        setErrors({
+          ...errors,
+          [fieldName]: '',
+        });
+      }
+    } else {
+      setErrors({
+        ...errors,
+        [fieldName]: value.trim() ? '' : `${fieldName} is required and cannot be empty.`,
+      });
+    }
+
     setFormData({
       ...formData,
       [fieldName]: value,
     });
-    setErrors({
-      ...errors,
-      [fieldName]: value ? '' : `${fieldName} is required.`,
-    });
   };
 
   const generateRandomId = () => {
-    return Math.random().toString(36).substr(2, 9); 
+    return Math.random().toString(36).substr(2, 9);
   };
 
   const handleSubmit = (e) => {
@@ -69,8 +86,8 @@ const dispatch = useDispatch();
     const newErrors = { ...errors };
 
     for (const key in formData) {
-      if (!formData[key]) {
-        newErrors[key] = `${key} is required.`;
+      if (!formData[key].trim()) {
+        newErrors[key] = `${key} is required and cannot be empty.`;
         formIsValid = false;
       }
     }
@@ -79,27 +96,29 @@ const dispatch = useDispatch();
     if (formIsValid) {
       const newData = {
         ...formData,
-        id: generateRandomId(), 
-        email:logedUserData.data.email,
-        status:"active"
+        id: generateRandomId(),
+        email:  logedUserData.data.email,
+        status: "active",
       };
       console.log("Form submitted:", newData);
-      let setUserJobResult = addUserJobDetail(newData)
-       dispatch(setUsersJobData(setUserJobResult))
-       clearState()
-      alert("Job Post Created")
+      let setUserJobResult = addUserJobDetail(newData);
+      dispatch(setUsersJobData(setUserJobResult));
+      clearState();
+      let JobsData = getUsersWithRoleHirer();
+      dispatch(setAllHirerData(JobsData));
+      alert("Job Post Created");
     }
   };
 
   const inputFields = [
-    { label: 'Title', type: 'text', placeholder: 'Title', name: 'title' },
-    { label: 'Company Name', type: 'text', placeholder: 'Company Name', name: 'companyName' },
-    { label: 'Industry', type: 'text', placeholder: 'Industry', name: 'industry' },
-    { label: 'Skill', type: 'text', placeholder: 'Skill', name: 'skill' },
-    { label: 'Location', type: 'text', placeholder: 'Location', name: 'location' },
-    { label: 'Work Mode', type: 'text', placeholder: 'Work Mode', name: 'workMode' },
-    { label: 'Description', type: 'text', placeholder: 'Description', name: 'description' },
-    { label: 'Salary', type: 'text', placeholder: 'Salary', name: 'salary' },
+    { label: 'Title', type: 'text', placeholder: 'Title', name: 'Title' },
+    { label: 'Company Name', type: 'text', placeholder: 'Company Name', name: 'Company Name' },
+    { label: 'Industry', type: 'text', placeholder: 'Industry', name: 'Industry' },
+    { label: 'Skill', type: 'text', placeholder: 'Skill', name: 'Skill' },
+    { label: 'Location', type: 'text', placeholder: 'Location', name: 'Location' },
+    { label: 'Work Mode', type: 'text', placeholder: 'Work Mode', name: 'Work Mode' },
+    { label: 'Description', type: 'text', placeholder: 'Description', name: 'Description' },
+    { label: 'Salary', type: 'text', placeholder: 'Salary', name: 'Salary' },
   ];
 
   return (
