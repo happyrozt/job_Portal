@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import "../App.css";
-
-
 import Input from '../components/input/Input';
 import { sendProposal, setAppliedJobData, userSelectedJob } from '../store/Slice';
 import { addProposalDataToUser, setuserAppliedJobData } from '../utils/localStorageHelpers';
@@ -11,7 +9,7 @@ import { addProposalDataToUser, setuserAppliedJobData } from '../utils/localStor
 const inputFields = [
   { label: 'Name', type: 'text', placeholder: 'Name', name: 'name' },
   { label: 'Education', type: 'text', placeholder: 'Education', name: 'education' },
-  { label: 'Experience', type: 'text', placeholder: 'Experience', name: 'experience' }
+  { label: 'Experience', type: 'text', placeholder: 'Experience (in years)', name: 'experience' }
 ];
 
 function SendProposalPage() {
@@ -54,10 +52,20 @@ function SendProposalPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [name]: value
-    }));
+
+    if (name === 'experience') {
+      const numberValue = value.replace(/[^\d]/g, '');
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        [name]: numberValue ? `${numberValue} years` : ''
+      }));
+    } else {
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        [name]: value
+      }));
+    }
+
     setErrors(prevErrors => ({
       ...prevErrors,
       [name]: value.trim() === "" ? `${name.charAt(0).toUpperCase() + name.slice(1)} is required` : ""
@@ -131,20 +139,17 @@ function SendProposalPage() {
       <p className='proposal-title'>Apply for {selectedJob.Title}</p>
       <form onSubmit={handleSubmit} className='proposal-form'>
         {inputFields.map(field => (
-          <div className='send-proposal-input-div'>
-             <Input
-            key={field.name}
-            label={field.label}
-            type={field.type}
-            name={field.name}
-            value={formData[field.name]}
-            onChange={handleChange}
-            placeholder={field.placeholder}
-            error={errors[field.name]}
-          
-          />
+          <div className='send-proposal-input-div' key={field.name}>
+            <Input
+              label={field.label}
+              type={field.type}
+              name={field.name}
+              value={formData[field.name]}
+              onChange={handleChange}
+              placeholder={field.placeholder}
+              error={errors[field.name]}
+            />
           </div>
-       
         ))}
         <div className='resume-div'>
           <label>Upload Resume</label>

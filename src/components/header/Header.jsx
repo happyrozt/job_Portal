@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../../App.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkLoggedIn, setUserRole, setUserData, setSearchedData, userLogout } from '../../store/Slice';
+import {  setUserRole, setSearchedData, userLogout } from '../../store/Slice';
 import { Link, useNavigate } from 'react-router-dom';
 import { filterHirersByTitle } from '../../utils/localStorageHelpers';
 

@@ -28,7 +28,6 @@ function App() {
       dispatch(setAllHirerData(JobsData));
       setLoading(false);
     };
-
     loadUserData();
   }, [dispatch]);
 
@@ -61,9 +60,8 @@ function App() {
         />
         <Route
           path="/proposals"
-          element={<ProtectedRoute element={<ViewProposalPage />} allowedRoles={['Hirer']} />}
+          element={<ProtectedRoute element={<ViewProposalPage />}  />}
         />
-        {/* Catch-all route for undefined paths */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

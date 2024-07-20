@@ -1,6 +1,7 @@
 import React from 'react';
 
-export default function JobListingCard({ jobsAData, handleClick }) {
+export default function JobListingCard({ jobsAData, handleClick,page }) {
+ 
   return (
     <div className='home-page-container'>
       <div className='job-list'>
@@ -8,7 +9,8 @@ export default function JobListingCard({ jobsAData, handleClick }) {
           <p>{jobsAData}</p>
         ) : jobsAData.length > 0 ? (
           jobsAData.map((job, index) => (
-            <div key={index} className='job-item' onClick={() => handleClick(job)}>
+          
+            <div key={index} className='job-item'  onClick={page === "Applied Jobs" ? null : () => handleClick(job)}>
               <h2>{job.Title}</h2>
               <p>{job.description}</p>
               <p>Industry: {job['Industry']}</p>
@@ -16,6 +18,7 @@ export default function JobListingCard({ jobsAData, handleClick }) {
               <p>Work Mode: {job['Work Mode']}</p>
               <p>Skill: {job['Skill']}</p>
               <p>Salary: {job['Salary']}</p>
+              {page === "Applied Jobs" && <p>Status: {job.status}</p>}
             </div>
           ))
         ) : (

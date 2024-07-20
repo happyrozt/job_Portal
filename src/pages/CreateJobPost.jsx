@@ -5,12 +5,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAllHirerData, setUsersJobData } from '../store/Slice';
 import { addUserJobDetail, getUsersWithRoleHirer } from '../utils/localStorageHelpers';
 
-function CreateJobPost() {
- 
-  const  logedUserData = useSelector((state) => state.Auth.logedUserData);
- 
- 
+const inputFields = [
+  { label: 'Title', type: 'text', placeholder: 'Title', name: 'Title' },
+  { label: 'Company Name', type: 'text', placeholder: 'Company Name', name: 'Company Name' },
+  { label: 'Industry', type: 'text', placeholder: 'Industry', name: 'Industry' },
+  { label: 'Skill', type: 'text', placeholder: 'Skill', name: 'Skill' },
+  { label: 'Location', type: 'text', placeholder: 'Location', name: 'Location' },
+  { label: 'Work Mode', type: 'text', placeholder: 'Work Mode', name: 'Work Mode' },
+  { label: 'Description', type: 'text', placeholder: 'Description', name: 'Description' },
+  { label: 'Salary', type: 'number', placeholder: 'Salary', name: 'Salary' },
+];
 
+function CreateJobPost() {
+  const logedUserData = useSelector((state) => state.Auth.logedUserData);
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     Title: '',
@@ -51,11 +58,10 @@ function CreateJobPost() {
     const { value } = e.target;
 
     if (fieldName === 'Salary') {
-      const salaryRegex = /^\d+\s*Lakh\s*per\s*annum$/i;
-      if (!salaryRegex.test(value)) {
+      if (isNaN(value) || parseInt(value) <= 0 || value.trim() === '') {
         setErrors({
           ...errors,
-          [fieldName]: 'Invalid salary format. Example: 90 Lakh per annum.',
+          [fieldName]: 'Salary must be a valid number greater than zero.',
         });
       } else {
         setErrors({
@@ -63,17 +69,20 @@ function CreateJobPost() {
           [fieldName]: '',
         });
       }
+      setFormData({
+        ...formData,
+        [fieldName]: value,
+      });
     } else {
       setErrors({
         ...errors,
         [fieldName]: value.trim() ? '' : `${fieldName} is required and cannot be empty.`,
       });
+      setFormData({
+        ...formData,
+        [fieldName]: value,
+      });
     }
-
-    setFormData({
-      ...formData,
-      [fieldName]: value,
-    });
   };
 
   const generateRandomId = () => {
@@ -92,15 +101,20 @@ function CreateJobPost() {
       }
     }
 
+    if (formData['Salary'] && (isNaN(formData['Salary']) || parseInt(formData['Salary']) <= 0 || formData['Salary'].trim() === '')) {
+      newErrors['Salary'] = 'Salary must be a valid number greater than zero.';
+      formIsValid = false;
+    }
+
     setErrors(newErrors);
     if (formIsValid) {
       const newData = {
         ...formData,
+        Salary: `${formData['Salary']} per month`,
         id: generateRandomId(),
-        email:  logedUserData.data.email,
+        email: logedUserData.data.email,
         status: "active",
       };
-      console.log("Form submitted:", newData);
       let setUserJobResult = addUserJobDetail(newData);
       dispatch(setUsersJobData(setUserJobResult));
       clearState();
@@ -109,17 +123,6 @@ function CreateJobPost() {
       alert("Job Post Created");
     }
   };
-
-  const inputFields = [
-    { label: 'Title', type: 'text', placeholder: 'Title', name: 'Title' },
-    { label: 'Company Name', type: 'text', placeholder: 'Company Name', name: 'Company Name' },
-    { label: 'Industry', type: 'text', placeholder: 'Industry', name: 'Industry' },
-    { label: 'Skill', type: 'text', placeholder: 'Skill', name: 'Skill' },
-    { label: 'Location', type: 'text', placeholder: 'Location', name: 'Location' },
-    { label: 'Work Mode', type: 'text', placeholder: 'Work Mode', name: 'Work Mode' },
-    { label: 'Description', type: 'text', placeholder: 'Description', name: 'Description' },
-    { label: 'Salary', type: 'text', placeholder: 'Salary', name: 'Salary' },
-  ];
 
   return (
     <div className='create-post-container'>
@@ -138,7 +141,6 @@ function CreateJobPost() {
             </div>
           ))}
         </div>
-
         <div className='create-post-button'>
           <button type="submit">Create Post</button>
         </div>

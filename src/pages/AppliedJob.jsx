@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAppliedJobData } from '../store/Slice';
 import '../App.css'
 import { getUserDataByEmail } from '../utils/localStorageHelpers';
+import JobListingCard from '../components/card/JobListingCard';
 
 function AppliedJob() {
   const [appliedJobs, setAppliedJobs] = useState([]);
@@ -20,11 +21,12 @@ function AppliedJob() {
       setAppliedJobs(appliedJobData);
     }
   }, [appliedJobData]);
+  
 
   return (
     <div className='appliedJobContainer'>
       <h2 className='appled-job-title'>Applied Jobs</h2>
-      {appliedJobs.length > 0 ? (
+      {/* {appliedJobs.length > 0 ? (
         appliedJobs.map((job, index) => (
           <div key={index} className='applied-job-item'>
             <h2>{job.Title}</h2>
@@ -39,7 +41,8 @@ function AppliedJob() {
         ))
       ) : (
         <p>No applied jobs found.</p>
-      )}
+      )} */}
+      <JobListingCard jobsAData={appliedJobs}  page={"Applied Jobs"}/>
     </div>
   );
 }

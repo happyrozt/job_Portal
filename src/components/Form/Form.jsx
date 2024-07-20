@@ -154,6 +154,11 @@ function Form() {
     }
   };
 
+  const toggleLoginRegister = () => {
+    setIsLoggedIn(prevState => !prevState);
+    handleClear();
+  };
+
   return (
     <div className='form-container'>
       <form onSubmit={handleSubmit} className="form">
@@ -212,11 +217,11 @@ function Form() {
         )}
         {isLoggedIn ? (
           <div>
-            Don't have an account? <button type="button" onClick={() => setIsLoggedIn(false)} className="form-register-link">Register</button>
+            Don't have an account? <button type="button" onClick={toggleLoginRegister} className="form-register-link">Register</button>
           </div>
         ) : (
           <div>
-            Already have an account? <button type="button" onClick={() => setIsLoggedIn(true)} className="form-login-link">Login</button>
+            Already have an account? <button type="button" onClick={toggleLoginRegister} className="form-login-link">Login</button>
           </div>
         )}
       </form>

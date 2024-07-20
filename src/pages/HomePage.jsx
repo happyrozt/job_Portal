@@ -10,9 +10,7 @@ function HomePage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [hirerJobs, setHirerJobs] = useState([]);
- const {jobsData,isUserRole,userSearchedData,logedUserData} = useSelector((state)=>state.Auth)
-
-  
+ const {jobsData,isUserRole,userSearchedData,logedUserData} = useSelector((state)=>state.Auth)  
 
   useEffect(() => {
     let JobsData = getUsersWithRoleHirer();
@@ -43,13 +41,12 @@ function HomePage() {
     }
   };
 
-
   return (
     <>
       {userSearchedData.length === 0 ? (
-      <JobListingCard jobsAData={hirerJobs} handleClick={handleClick } />
+      <JobListingCard jobsAData={hirerJobs} handleClick={handleClick } page={"HomePage"}/>
       ) : (
-        <JobListingCard jobsAData={userSearchedData}  handleClick={handleClick } />
+        <JobListingCard jobsAData={userSearchedData}  handleClick={handleClick } page={"SearchPage"} />
       )}
     </>
 

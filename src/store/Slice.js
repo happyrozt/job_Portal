@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {  getLoggeduserDatafromlocStr, getUsersWithRoleHirer } from "../utils/localStorageHelpers";
 const initialState = {
     isUserLoggedIn: null,
     isUserRole: null,
