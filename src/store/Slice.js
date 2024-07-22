@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { getLoggeduserDatafromlocStr, getUsersWithRoleHirer } from "../utils/localStorageHelpers";
 const initialState = {
     isUserLoggedIn: null,
     isUserRole: null,
-    logedUserData: null,
-    jobsData: null,
+    logedUserData:getLoggeduserDatafromlocStr(),
+    jobsData: getUsersWithRoleHirer(),
     userJobData: null,
     jobPostStatus: null,
     closeJobData: [],
@@ -16,6 +17,8 @@ const initialState = {
     verifyEmail: false,
     registerUserData: null,
 }
+
+
 
 const userAuthSlice = createSlice({
     name: "Auth",
@@ -35,6 +38,7 @@ const userAuthSlice = createSlice({
             state.isUserRole = action.payload
         },
         setUserData: (state, action) => {
+            
             state.logedUserData = action.payload 
         },
         setAllHirerData: (state, action) => {

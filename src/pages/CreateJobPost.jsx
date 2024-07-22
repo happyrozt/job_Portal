@@ -4,6 +4,7 @@ import Input from '../components/input/Input';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllHirerData, setUsersJobData } from '../store/Slice';
 import { addUserJobDetail, getUsersWithRoleHirer } from '../utils/localStorageHelpers';
+import { useNavigate } from 'react-router-dom';
 
 const inputFields = [
   { label: 'Title', type: 'text', placeholder: 'Title', name: 'Title' },
@@ -18,6 +19,7 @@ const inputFields = [
 
 function CreateJobPost() {
   const logedUserData = useSelector((state) => state.Auth.logedUserData);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     Title: '',
@@ -118,6 +120,7 @@ function CreateJobPost() {
       let setUserJobResult = addUserJobDetail(newData);
       dispatch(setUsersJobData(setUserJobResult));
       clearState();
+      navigate('/')
       let JobsData = getUsersWithRoleHirer();
       dispatch(setAllHirerData(JobsData));
       alert("Job Post Created");

@@ -10,30 +10,10 @@ import SendProposalPage from './pages/SendProposalPage';
 import AppliedJob from './pages/AppliedJob';
 import ViewProposalPage from './pages/ViewProposalPage';
 import ProtectedRoute from './components/ProtectedRoute';
-import { useEffect, useState } from 'react';
-import { getLoggeduserDatafromlocStr, getUsersWithRoleHirer } from './utils/localStorageHelpers';
-import { useDispatch, useSelector } from 'react-redux';
-import { setAllHirerData, setUserData } from './store/Slice';
+
 
 function App() {
-  const dispatch = useDispatch();
-  const logedUserData = useSelector((state) => state.Auth.logedUserData);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadUserData = async () => {
-      let logedUserResult = getLoggeduserDatafromlocStr();
-      dispatch(setUserData(logedUserResult));
-      let JobsData = getUsersWithRoleHirer();
-      dispatch(setAllHirerData(JobsData));
-      setLoading(false);
-    };
-    loadUserData();
-  }, [dispatch]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <Router>

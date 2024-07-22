@@ -7,7 +7,7 @@ import JobListingCard from '../components/card/JobListingCard';
 
 function AppliedJob() {
   const [appliedJobs, setAppliedJobs] = useState([]);
-  const {logedUserData,appliedJobData} = useSelector((state)=> state.Auth)
+  const {logedUserData,appliedJobData,userSearchedData} = useSelector((state)=> state.Auth)
   const dispatch = useDispatch();
   useEffect(() => {
     if (logedUserData && logedUserData.data && logedUserData.data.email) {
@@ -26,23 +26,12 @@ function AppliedJob() {
   return (
     <div className='appliedJobContainer'>
       <h2 className='appled-job-title'>Applied Jobs</h2>
-      {/* {appliedJobs.length > 0 ? (
-        appliedJobs.map((job, index) => (
-          <div key={index} className='applied-job-item'>
-            <h2>{job.Title}</h2>
-            <p>{job.Description}</p>
-            <p>Industry: {job.Industry}</p>
-            <p>Location: {job.Location}</p>
-            <p>Work Mode: {job['Work Mode']}</p>
-            <p>Skill: {job.Skill}</p>
-            <p>Salary: {job.Salary}</p>
-            <p>Status : {job.status}</p>
-          </div>
-        ))
+
+      {userSearchedData.length === 0 ? (
+     <JobListingCard jobsAData={appliedJobs}  page={"Applied Jobs"}/>
       ) : (
-        <p>No applied jobs found.</p>
-      )} */}
-      <JobListingCard jobsAData={appliedJobs}  page={"Applied Jobs"}/>
+        <JobListingCard jobsAData={userSearchedData}  page={"Applied Jobs"} />
+      )}
     </div>
   );
 }

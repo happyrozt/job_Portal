@@ -44,9 +44,22 @@ export const removeFromLocalStorage = (key) => {
 };
 
 export const getUsersWithRoleHirer = () => {
-  const users = getFromLocalStorage('users')
-  return users;
+  const users = getFromLocalStorage('users');
+  
+  if (!users) return [];
+
+  return users.reduce((acc, user) => {
+    if (user.role === 'Hirer' && user.data) {
+      const activeJobs = user.data.filter(job => job.status === 'active');
+      return [...acc, ...activeJobs];
+    }
+    return acc;
+  }, []);
 };
+
+
+
+
 
 
 export const addUserJobDetail = (newUser) => {
@@ -151,7 +164,7 @@ export const filterHirersByTitle = (title) => {
       item.status === 'active' && item.Title.toLowerCase().includes(lowercasedTitle)
     ));
     if (filteredData.length === 0) {
-      return 'No job found';
+      return [];
     }
 
   return filteredData;
@@ -166,9 +179,9 @@ export const updateAppliedJobStatus = (email, id, newStatus) => {
   const updatedUsers = users.map(user => {
     if (user.email === email) {
       const updatedData = user.data.map(item => {
-        console.log(item, "id", id)
+       
         if (item.id === id) {
-          console.log(item, "items")
+        
           return { ...item, status: newStatus };
         }
         return item;

@@ -4,7 +4,7 @@ import { getUserLogedUserDataByEmail, setAllHirerData, updateJobPoststatus } fro
 import { getUserDataByEmail, getUsersWithRoleHirer, toggleJobStatus } from '../utils/localStorageHelpers';
 
 function ClosejobPost() {
-  const {logedUserData,closeJobPageData} = useSelector((state)=>state.Auth)
+  const {logedUserData,closeJobPageData,jobPostStatus} = useSelector((state)=>state.Auth)
   const [logedUserJObData, setLogedUserJObData] = useState([]);
   const dispatch = useDispatch();
 
@@ -27,7 +27,9 @@ function ClosejobPost() {
   const handleStatus = (id, email) => {
     const payLoad = { email, id };
     let JobPostStatus = toggleJobStatus(payLoad)
+    console.log(jobPostStatus,"beforee")
     dispatch(updateJobPoststatus(JobPostStatus));
+    console.log(jobPostStatus,"after")
     let closeJobPageData = getUserDataByEmail(logedUserData.data.email)
     dispatch(getUserLogedUserDataByEmail(closeJobPageData))
     let JobsData = getUsersWithRoleHirer();

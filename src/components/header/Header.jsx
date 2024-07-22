@@ -3,7 +3,7 @@ import '../../App.css';
 import { useDispatch, useSelector } from 'react-redux';
 import {  setUserRole, setSearchedData, userLogout } from '../../store/Slice';
 import { Link, useNavigate } from 'react-router-dom';
-import { filterHirersByTitle } from '../../utils/localStorageHelpers';
+import { filterHirersByTitle, getUsersWithRoleHirer } from '../../utils/localStorageHelpers';
 
 
 export default function Header() {
@@ -16,6 +16,20 @@ export default function Header() {
     const handleNavigate = () => {
         navigate("/login");
     };
+
+    // const handleSearch = (event) => {
+    //     const query = event.target.value;
+    //     setSearchQuery(query);
+    //     // if(!query || query === "") {
+    //     //     let JobsData = getUsersWithRoleHirer();
+    //     //     dispatch(setSearchedData(JobsData));
+    //     // }else{
+    //     //     let searchJobByUser = filterHirersByTitle(query)
+    //     //     dispatch(setSearchedData(searchJobByUser))
+    //     // }
+    // };
+
+
 
     const handleSearch = (event) => {
         const query = event.target.value;

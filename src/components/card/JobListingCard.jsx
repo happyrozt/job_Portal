@@ -5,12 +5,12 @@ export default function JobListingCard({ jobsAData, handleClick,page }) {
   return (
     <div className='home-page-container'>
       <div className='job-list'>
-        {typeof jobsAData === 'string' ? (
-          <p>{jobsAData}</p>
+        { jobsAData.length === 0 ? (
+          <p>No Jobs Found</p>
         ) : jobsAData.length > 0 ? (
           jobsAData.map((job, index) => (
           
-            <div key={index} className='job-item'  onClick={page === "Applied Jobs" ? null : () => handleClick(job)}>
+            <div key={index} className='job-item'  onClick={page === "Applied Jobs"  ? null : () => handleClick(job)}>
               <h2>{job.Title}</h2>
               <p>{job.description}</p>
               <p>Industry: {job['Industry']}</p>
@@ -19,6 +19,7 @@ export default function JobListingCard({ jobsAData, handleClick,page }) {
               <p>Skill: {job['Skill']}</p>
               <p>Salary: {job['Salary']}</p>
               {page === "Applied Jobs" && <p>Status: {job.status}</p>}
+              
             </div>
           ))
         ) : (

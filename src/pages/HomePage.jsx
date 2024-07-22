@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkFreeLancerJobApplication, setAllHirerData, setUserData, userSelectedJob } from '../store/Slice';
+import { checkFreeLancerJobApplication, setAllHirerData, setSearchedData, setUserData, userSelectedJob } from '../store/Slice';
 import { checkFreelancerApplicationStatus, getLoggeduserDatafromlocStr, getUsersWithRoleHirer } from '../utils/localStorageHelpers';
 import JobListingCard from '../components/card/JobListingCard';
 
@@ -13,22 +13,9 @@ function HomePage() {
  const {jobsData,isUserRole,userSearchedData,logedUserData} = useSelector((state)=>state.Auth)  
 
   useEffect(() => {
-    let JobsData = getUsersWithRoleHirer();
-      dispatch(setAllHirerData(JobsData));
-  
-    if (jobsData && jobsData.length > 0) {
-
-      const jobs = jobsData.reduce((acc, user) => {
-        if (user.role === 'Hirer' && user.data) {
-          const activeJobs = user.data.filter(job => job.status === 'active');
-
-          return [...acc, ...activeJobs];
-        }
-        return acc;
-      }, []);
-      setHirerJobs(jobs.reverse());
-    }
-  }, [dispatch]);
+    setHirerJobs([...jobsData].reverse());
+    console.log("evry  rnader")
+  }, []);
 
   const handleClick = (clickedData) => {
     if (isUserRole === 'Freelancer') {
@@ -43,12 +30,18 @@ function HomePage() {
 
   return (
     <>
+        {/* <JobListingCard jobsAData={userSearchedData}  handleClick={handleClick } page={"SearchPage"} /> */}
+        {/* <JobListingCard jobsAData={hirerJobs}  handleClick={handleClick } page={"HomePage"} /> */}
+
       {userSearchedData.length === 0 ? (
       <JobListingCard jobsAData={hirerJobs} handleClick={handleClick } page={"HomePage"}/>
       ) : (
         <JobListingCard jobsAData={userSearchedData}  handleClick={handleClick } page={"SearchPage"} />
       )}
     </>
+    // </>
+
+    
 
   );
 }

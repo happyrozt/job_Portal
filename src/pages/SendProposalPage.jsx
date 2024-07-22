@@ -100,7 +100,7 @@ function SendProposalPage() {
       experience,
       resume: resumeFile.name,
       personalInfo: proposal.personalInfo,
-      appledFor: selectedJob.title,
+      appledFor: selectedJob.Title,
       status: "Pending",
       id: selectedJob.id,
       email: logedUserData.data.email
